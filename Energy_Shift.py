@@ -22,13 +22,15 @@ def get_float(txt):
         if (len(txt) > 0): print('note: could not parse', txt, 'as float')
         return np.NaN
 
-# Array of polarizations (reduced to 4)
+# Polarization Array
+# Polarization has no physical meaning here, the three entries correspond to the insulating-band cases: 1D Parab. , 2D Parab., 2D Check. (HOVHS)
+
 Pa = [0.435, 0.50, 0.70]
 nP = len(Pa)
 
-# Empty arrays to fill with data for all the polarizations
+# Empty arrays to fill with data for all the polarizations. \delta \omega_{\mathrm{P}} 
 omega_a_P = []
-DelR_a_P = []
+Energy_Shift_a_P = [] # \delta \omega_{\mathrm{P}} 
 
 # Number of columns to read (2: one for frequency and one for DelR)
 n_col = 2
@@ -39,15 +41,15 @@ cnv = dict(zip(range(n_col), [get_float]*n_col))
 for i in range(0, nP):
     P = Pa[i]
     # Setting path to txt file for polarization P (P is written as a 4 decimal float)
-    path = f'DelRdA_gtoGap_P{P:.4f}_data.txt'
+    path = f'Energy_Shift_gtoGap_P{P:.4f}_data.txt'
     print(path)
     # Opening file
     with open(path, 'rt') as file_in:
         # Importing the columns as temporary arrays (frequency and DelR)
-        omega_a_tmp, DelR_a_tmp = np.loadtxt(file_in, unpack=True, skiprows=3, usecols=range(n_col), converters=cnv)
+        omega_a_tmp, Energy_Shift_a_tmp = np.loadtxt(file_in, unpack=True, skiprows=3, usecols=range(n_col), converters=cnv)
         # Appending the temporary arrays to the arrays that contain all the polarizations
         omega_a_P.append(omega_a_tmp)
-        DelR_a_P.append(DelR_a_tmp)
+        Energy_Shift_a_P.append(Energy_Shift_a_tmp)
 
 #%% Plot cell
 
@@ -101,7 +103,7 @@ ax.yaxis.set_tick_params(which='both', direction='in', right='on', pad=ticks_pad
 labels = ["2D Check. (HOVHS)", "1D Parab.", "2D Parab."]
 for i in range(0, nP):
     P = Pa[i]
-    ax.plot(omega_a_P[i], DelR_a_P[i], dashes=dash_list[i], color=color_list[i], label=labels[i], linewidth=lw)
+    ax.plot(omega_a_P[i], Energy_Shift_a_P[i], dashes=dash_list[i], color=color_list[i], label=labels[i], linewidth=lw)
 
 # Adding mathematical expressions as annotations
 # ax.text(0.6, 0.019, r'$\sim\left(\frac{g}{W}\right)^{2} \log{\left(\frac{W}{g}\right)}$', 
@@ -131,9 +133,9 @@ ax.legend(loc=lgloc, fontsize=LegendSize, frameon=0, handlelength=lg_handle_size
 
 ax.text(
     0.04, ymax - 0.02,
-    r'$\quad \,\,\,\,\,\omega_0 = E_g$'      # 1st math fragment
-    '\n'                     # real newline (not raw)
-    r'$W/E_g = 0.3$',        # 2nd math fragment
+    r'$\quad \,\,\,\,\,\omega_0 = E_g$'   
+    '\n'                     
+    r'$W/E_g = 0.3$',        # W is the bandwidth
     fontsize=LabelSize,
     color='black',
     ha='left',
