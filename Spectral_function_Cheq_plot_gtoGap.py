@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on 05.07.2023
+# Adapted by Igor Gianardi (first author) from code originally written by
+# Michele Pini (second author; ORCID: https://orcid.org/0000-0001-5522-5109).
 
-@author: Michele
-"""
-
-#%% Initialization cell
 #%% Initialization cell
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -51,6 +46,8 @@ def get_int(txt):
         if (len(txt) > 0): print('note: could not parse',txt,'as integer')
         return np.NAN 
 
+
+# In the following the letter q does not denote the phtonic momentum but the light-matter coupling g
 #%% Input read cell - A(q,omega)
 #It reads input data from txt files
 
