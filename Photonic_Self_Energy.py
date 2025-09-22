@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# Adapted by Igor Gianardi (first author) from code originally written by
+# Michele Pini (second author; ORCID: https://orcid.org/0000-0001-5522-5109).
+
 #%% Initialization cell
 import matplotlib.pyplot as plt # plot library
 import matplotlib.ticker as ticker # ticks library
@@ -25,14 +27,15 @@ def get_float(txt):
 
 #%% Input read cell
 
-# Array of polarizations 
+# Polarization Array
+# Polarization has no physical meaning here, the three entries correspond to the insulating-band cases: 1D Parab. , 2D Parab., 2D Check. (HOVHS)
 Pa = [0.435, 0.50, 0.70]
 nP = len(Pa)
 
-# Empty arrays to fill with data for both polarizations
+# Empty arrays to fill with data for all polarizations
 omega_a_P = []
-DOS_up_a_P = []
-DOS_down_a_P = []
+Self_Im_a_P = []
+Self_Real_a_P = []
 
 # Number of columns to read
 n_col = 3
@@ -44,17 +47,17 @@ cnv = dict(zip(range(n_col), [get_float] * n_col))  # Usare get_float per tutti 
 for i in range(0, nP):
     P = Pa[i]
     # Setting path to txt file for polarization P (P is written as a 4 decimal float)
-    path = f'Dos_P{P:.4f}_data.txt'
+    path = f'Photonic_Self_Energy_P{P:.4f}_data.txt'
     print(path)
     # Opening file
     file_in = open(path, 'rt')
     # Importing the columns as temporary arrays
-    omega_a_tmp, DOS_down_a_tmp, DOS_up_a_tmp = \
+    omega_a_tmp, Self_Real_a_tmp, Self_Im_a_tmp = \
     np.loadtxt(file_in, unpack=True, skiprows=3, usecols=range(n_col), converters=cnv)
     # Appending the temporary arrays to the arrays that contain all the polarizations
     omega_a_P.append(omega_a_tmp)
-    DOS_up_a_P.append(DOS_up_a_tmp)
-    DOS_down_a_P.append(DOS_down_a_tmp)
+    Self_Im_a_P.append(Self_Im_a_tmp)
+    Self_Real_a_P.append(Self_Real_a_tmp)
     # Closing file
     file_in.close()
 
@@ -147,7 +150,7 @@ ax = axs[0]
 labels = ["2D Check.", "1D Parab.", "2D Parab." ]
 for i in range(0, nP):
     P = Pa[i]
-    ax.plot(omega_a_P[i], DOS_up_a_P[i], dashes=dash_list[i], color=color_list[i], linewidth=lw, label=labels[i])
+    ax.plot(omega_a_P[i], Self_Im_a_P[i], dashes=dash_list[i], color=color_list[i], linewidth=lw, label=labels[i])
     
 # Setting axis labels
 ax.set_ylabel(
@@ -171,7 +174,7 @@ ax = axs[1]
 labels = ["2D Check.", "1D Parab.", "2D Parab." ]
 for i in range(0, nP):
     P = Pa[i]
-    ax.plot(omega_a_P[i], DOS_down_a_P[i], dashes=dash_list[i], color=color_list[i], linewidth=lw, label=labels[i])
+    ax.plot(omega_a_P[i], Self_Real_a_P[i], dashes=dash_list[i], color=color_list[i], linewidth=lw, label=labels[i])
 
 # Setting axis labels
 ax.set_ylabel(
