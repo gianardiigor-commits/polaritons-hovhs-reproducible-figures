@@ -1,3 +1,6 @@
+# Adapted by Igor Gianardi (first author) from code originally written by
+# Michele Pini (second author; ORCID: https://orcid.org/0000-0001-5522-5109).
+
 #%% Initialization and input read cell
 import matplotlib.pyplot as plt #plot library
 import matplotlib.ticker as ticker #ticks library
